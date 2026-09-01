@@ -6,11 +6,13 @@
 <title>Eontology — Verification Engine Preview</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
 <style>
   :root{
     --ink:#1B2430; --ink-soft:#5B6472; --ink-faint:#8B93A0;
     --paper:#EFF1EC; --panel:#FFFFFF; --line:#DBDFD6; --line-soft:#E7E9E2;
-    --navy:#223A5E; --navy-soft:#34527D; --navy-bg:#E4E9F0;
+    --navy:#034459; --navy-soft:#0B5D77; --navy-bg:#E2EEF0;
+    --accent:#18E1C9; --accent-ink:#04564C; --accent-bg:#E3FBF7;
     --green:#2F6F4E; --green-bg:#E3EEE7; --green-line:#B9D6C4;
     --red:#8B3A3A; --red-bg:#F3E4E1; --red-line:#E0BEB6;
     --amber:#8A5E14; --amber-bg:#F3EBDB; --amber-line:#E3CE9F;
@@ -31,14 +33,12 @@
   .account-name{font-size:13px;font-weight:600;}
   .soon-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);background:var(--gray-bg);padding:2px 6px;border-radius:4px;margin-left:2px;}
   .brand{display:flex;align-items:center;gap:10px;}
-  .brand-mark{width:26px;height:26px;border:2px solid var(--navy);border-radius:50%;position:relative;flex-shrink:0;}
-  .brand-mark::after{content:"";position:absolute;inset:5px;border:1.5px solid var(--navy);border-radius:50%;}
-  .brand-name{font-family:'Zilla Slab',serif;font-weight:600;font-size:19px;letter-spacing:.2px;}
+  .brand-logo{height:24px;width:auto;display:block;}
   .steps{display:flex;gap:0;align-items:center;}
   .step-dot{display:flex;align-items:center;gap:8px;padding:0 14px;position:relative;}
   .step-dot:not(:last-child)::after{content:"";position:absolute;right:-1px;top:50%;width:22px;height:1px;background:var(--line);}
   .dot{width:9px;height:9px;border-radius:50%;background:var(--line);flex-shrink:0;transition:background .2s;}
-  .step-dot.active .dot{background:var(--navy);}
+  .step-dot.active .dot{background:var(--accent);}
   .step-dot.done .dot{background:var(--green);}
   .step-label{font-size:12px;color:var(--ink-faint);}
   .step-dot.active .step-label{color:var(--navy);font-weight:600;}
@@ -66,6 +66,7 @@
   .dropzone .dz-title{font-weight:600;font-size:15px;margin-bottom:4px;}
   .dropzone .dz-sub{font-size:13px;color:var(--ink-faint);}
   #fileInput{display:none;}
+  .upload-error{margin-top:12px;font-size:13px;color:var(--red);background:var(--red-bg);border:1px solid var(--red-line);border-radius:5px;padding:10px 14px;}
   .file-row{display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--navy-bg);border-radius:6px;margin-top:6px;}
   .file-icon{width:34px;height:34px;border-radius:5px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
   .file-meta{flex:1;min-width:0;}
@@ -90,7 +91,7 @@
   .extract-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line-soft);}
   .extract-row:last-child{border-bottom:none;}
   .extract-row.disabled{opacity:.5;}
-  .extract-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--navy);flex-shrink:0;}
+  .extract-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);flex-shrink:0;}
   .extract-name{font-weight:600;font-size:14px;flex:1;}
   .extract-tag{font-size:11px;color:var(--ink-faint);border:1px solid var(--line);border-radius:20px;padding:2px 9px;}
 
@@ -157,8 +158,7 @@
 
 <div class="topbar">
   <div class="brand">
-    <div class="brand-mark"></div>
-    <div class="brand-name">Eontology</div>
+    <img class="brand-logo" src="data:image/png;base64,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" alt="Eontology">
   </div>
   <div class="steps" id="stepNav"></div>
   <div class="topbar-right">
@@ -190,6 +190,7 @@ const state = {
   fileName: null,
   fileSize: null,
   scanned: false,
+  uploadError: null,
   industry: '',
   macrotopic: '',
   topic: '',
@@ -231,11 +232,51 @@ const MOCK_EVIDENCE = [
   },
 ];
 
-const INDUSTRIES = ['Manufacturing','Construction','Energy & Utilities','Healthcare','Logistics & Supply Chain'];
+const INDUSTRIES = [
+  'Agriculture, Forestry & Fishing',
+  'Mining & Extraction',
+  'Manufacturing — Food & Beverage',
+  'Manufacturing — Textiles & Apparel',
+  'Manufacturing — Chemicals & Pharmaceuticals',
+  'Manufacturing — Metals & Machinery',
+  'Manufacturing — Electronics & Technology Hardware',
+  'Manufacturing — Automotive & Transport Equipment',
+  'Manufacturing — Other',
+  'Energy & Utilities',
+  'Construction & Real Estate',
+  'Transportation & Logistics',
+  'Retail & Wholesale Trade',
+  'Information & Communication Technology',
+  'Financial Services & Insurance',
+  'Healthcare & Pharmaceuticals',
+  'Hospitality, Travel & Tourism',
+  'Professional & Business Services',
+  'Public Sector & Government',
+  'Education',
+  'Waste Management & Recycling',
+  'Telecommunications',
+  'Media & Entertainment',
+  'Other',
+];
+// Source of truth: Eontology library ontology (17 SDG-based Macrotopics), in canonical order.
 const MACROTOPICS = {
-  'Environmental': ['ISO 14001 — Environmental Management'],
-  'Health & Safety': ['ISO 45001 — Occupational Health & Safety'],
-  'Quality': ['ISO 9001 — Quality Management'],
+  "No poverty": ["Urban poverty", "Underprivileged protection", "Social safety nets", "Rural development", "Poverty eradication programs", "Poverty alleviation", "Microfinance", "Livelihood opportunities", "Income inequality", "Humanitarian aid", "Food security", "Food accessibility", "Finance accessibility", "Economic empowerment", "Basic needs", "Affordable housing", "Access to healthcare", "Access to education"],
+  "Zero hunger": ["Waste reduction", "Sustainable fishing", "Sustainable diets", "Seed sovereignty", "Rural livelihoods", "Resilient farming", "Nutritional support", "Nutrition education", "Micronutrient intake", "Land access", "Hunger relief", "Food systems", "Food security", "Food justice", "Food distribution", "Community gardens", "Climate-smart agriculture", "Agricultural productivity"],
+  "Good health and well-being": ["Universal health coverage", "Substance abuse and addiction", "Sexual and reproductive health", "Non-communicable diseases (NCDs)", "Infectious diseases prevention and control", "Environmental and occupational health", "Substances and addiction", "Physical activity and fitness", "Nutrition and food security", "Mental health and wellbeing", "Healthcare equity and access", "Health research and innovation", "Global health security", "Global health collaboration", "Child and adolescent health", "Social determinants of health", "Aging and geriatric health", "Health policy and systems", "Digital health and telemedicine", "Emergency preparedness and response", "Health literacy and education"],
+  "Quality education": ["Vocational training", "Teacher training", "Student well-being", "Stem education", "School infrastructure", "Remote learning", "Quality education", "Literacy programs", "Lifelong learning", "Inclusive education", "Global citizenship", "Gender equality in education", "Equity in quality education", "Education policy", "Education funding", "Education for all", "Digital literacy", "Curriculum diversity", "Access to learning"],
+  "Gender equity": ["Workforce equity", "Women's rights", "Women in stem", "Social stereotypes", "Reproductive rights", "Parental leave", "Legal gender equality", "Gender-based violence", "Gender identity", "Female political representation", "Female media representation", "Female leadership roles", "Family planning", "Equal pay", "Equal health services", "Equal economic opportunities", "Cultural norms", "Child marriage"],
+  "Clean water and sanitation": ["Waterborne diseases prevention", "Water scarcity mitigation strategies", "Water quality monitoring", "Water purification techniques", "Water conservation practices", "Wastewater treatment", "Urban sanitation challenges", "Sustainable water resource management", "Sanitation infrastructure", "Rural water supply systems", "Public health interventions related to water", "Innovative sanitation solutions", "Indigenous water management practices", "Hygiene education and promotion", "Household water filtration systems", "Financing for water and sanitation projects", "Emergency water supply and response", "Drinking water standards and regulations", "Community water management", "Access to clean drinking water"],
+  "Clean energy": ["Wind turbines", "Wind farms", "Urban planning clean energy", "Tidal and wave energy", "Sustainable agriculture energy", "Solar photovoltaic systems", "Smart grid technologies", "Renewable energy certification", "Ocean thermal energy", "Microgrids", "Hydropower plants", "Green buildings", "Geothermal energy", "Energy-efficient appliances", "Energy storage technologies", "Energy management systems", "Energy for sustainable transportation", "Energy for electric vehicles", "Energy efficient lighting", "Eco-friendly construction materials", "Distributed energy resources", "Community solar projects", "Climate resilience", "Clean energy skills", "Clean energy integration", "Circular economy energy", "Carbon offset programs", "Biomass energy"],
+  "Decent work and economic growth": ["Youth employment", "Sustainable enterprises", "Social protection", "Safe working conditions", "Quality jobs", "Labor rights", "Job security", "Inclusive employment", "Gender equality", "Full employment", "Financial inclusion", "Fair wages", "Equal opportunities", "Entrepreneurship", "Employment stability", "Economic stability", "Economic growth", "Decent work"],
+  "Industry, innovation and infrastructure": ["Water infrastructure", "Waste reduction strategies", "Tech-driven healthcare", "Sustainable industry", "SMEs industrial support", "Resilient infrastructure", "Research & development", "Public-private synergy", "Innovation promotion", "Infrastructure financing", "Industrial safety standards", "Inclusive tech growth", "Green manufacturing", "Global transport networks", "Digital connectivity", "Climate-proofing projects"],
+  "Reduced inequalities": ["Youth empowerment initiatives", "Wealth redistribution", "Socioeconomic harmony", "Social justice", "Racial equality", "Poverty alleviation", "Minority empowerment", "Legal equality", "Income parity", "Inclusive prosperity", "Inclusive policies", "Fair representation", "Equal access to opportunities", "Educational equity", "Economic justice", "Diversity advocacy", "Disability rights", "Cultural integration", "Anti-discrimination", "Accessible healthcare"],
+  "Smart cities": ["Water management", "Waste management", "Urban planning analytics", "Urban mobility", "Urban green spaces", "Urban autonomous taxis", "Sustainable infrstructure", "Smart street lighting", "Smart parking solutions", "Smart grids", "Smart buildings", "Public safety", "IoT in cities", "Intelligent transportation systems", "Environmental monitoring", "Energy management", "E-government spaces", "Digital governance", "Civic engagement", "Air quality monitoring"],
+  "Sustainable consumption and production": ["Zero-waste initiatives", "Waste reduction strategies", "Sustainable supply chains", "Sustainable agricultural practices", "Responsible purchasing habits", "Resource conservation efforts", "Reneawable energy adoption", "Production carbon footprint reduction", "Product life-cycle analysis", "Minimalist lifestyles", "Green product design", "Green manufacturing methods", "Fair trade principles", "Ethical sourcing standards", "Ethical labor practices", "Energy-efficient production", "Eco-friendly packaging", "Eco-conscious consumerism", "Closed-loop systems", "Circular economy practices"],
+  "Climate action": ["Sustainable transportation", "Sustainable agriculture practices", "Sea level rise", "Ocean acidification", "Melting ice caps and glaciers", "International climate agreements", "Greenhouse gas emission reduction", "Extreme weather events", "Energy transition", "Deforestation and reforestation", "Climate resilience", "Climate justice and equity", "Climate change adaptation strategies", "Climate biodiversity resiliance", "Climate action for resilience", "Circular economy initiatives", "Carbon footprint reduction", "Carbon capture and storage"],
+  "Life below water": ["Sustainable fisheries", "Species conservation", "Seafood promotion", "Protected areas", "Plastic waste reduction", "Overfishing control", "Ocean research", "Ocean governance", "Ocean energy", "Ocean acidification", "Marine pollution", "Marine biodiversity", "IUU fishing control", "Coral reef protection", "Coastal tourism", "Coastal restoration", "Coastal management", "Climate adaptation", "Blue economy", "Aquaculture practices"],
+  "Life on land": ["Wildlife habitat preservation", "Wildlife corridor conservation", "Wildlife conservation", "Sustainable agriculture", "Soil health management", "Reforestation initiatives", "Protected areas management", "Land use planning", "Land ecosystem restoration", "Land degradation control", "Indigenous land rights", "Habitat restoration", "Forest protection", "Ecological restoration", "Desertification mitigation", "Deforestation prevention", "Conservation farming", "Community conservation", "Biodiversity conservation", "Afforestation programs"],
+  "Peace, justice and strong institutions": ["Transparent institutions", "Social cohesion", "Security sector reform", "Rule of law", "Reconciliation processes", "Peacebuilding efforts", "Legal empowerment", "Judicial independence", "Institutional strengthening", "Human rights", "Good governance", "Equality before law", "Dispute resolution", "Democratic practices", "Conflict resolution", "Conflict prevention", "Civil society engagement", "Anti-corruption measures", "Accountability systems", "Access to justice"],
+  "Partnerships for the goals": ["Trade and equitable rules for sustainable development", "Sustainable development partnerships", "Global sustainability regulation", "Global health partnerships", "Global financial support mechanisms", "Global financial governance", "Global access to internet-based information"],
 };
 const EXTRACT_TYPES = [
   {name:'Claims about certifications', enabled:true, tag:null},
@@ -269,7 +310,7 @@ const RENDERERS = {
   upload: () => `
     <div class="eyebrow">Step 1 of 6</div>
     <h1 class="headline">Upload a document</h1>
-    <p class="sub">Upload a document that may contain certification-related claims — a proposal, a supplier submission, an audit pack. PDF and DOCX supported.</p>
+    <p class="sub">Upload a document that may contain certification-related claims — a proposal, a supplier submission, an audit pack. PDF supported.</p>
     <div class="panel">
       ${state.fileName ? `
         <div class="file-row">
@@ -286,9 +327,10 @@ const RENDERERS = {
         <div class="dropzone" id="dropzone">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5B6472" stroke-width="1.5"><path d="M12 3v12m0-12l-4 4m4-4l4 4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
           <div class="dz-title">Drop a file here, or click to browse</div>
-          <div class="dz-sub">PDF or DOCX, up to 20MB</div>
+          <div class="dz-sub">PDF only, up to 20MB</div>
         </div>
-        <input type="file" id="fileInput" accept=".pdf,.docx">
+        <input type="file" id="fileInput" accept="application/pdf,.pdf">
+        ${state.uploadError ? `<div class="upload-error">${state.uploadError}</div>` : ''}
       `}
     </div>
     <div class="actions">
@@ -324,7 +366,7 @@ const RENDERERS = {
         </select>
       </div>
       <div class="field" style="margin-bottom:0">
-        <label>What should we extract?</label>
+        <label>What should we extract and process for evidence?</label>
         <div class="extract-list">
           ${EXTRACT_TYPES.map((e,i)=>`
             <div class="extract-row ${e.enabled?'':'disabled'}">
@@ -505,13 +547,20 @@ function attachHandlers(){
       });
     });
     document.getElementById('restartBtn').addEventListener('click', ()=>{
-      Object.assign(state, {step:0, fileName:null, fileSize:null, scanned:false, industry:'', macrotopic:'', topic:'', claims:[], evidence:[]});
+      Object.assign(state, {step:0, fileName:null, fileSize:null, scanned:false, uploadError:null, industry:'', macrotopic:'', topic:'', claims:[], evidence:[]});
       render();
     });
   }
 }
 
 function simulateUpload(file){
+  const isPdf = file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+  if(!isPdf){
+    state.uploadError = `"${file.name}" isn't a PDF. Only PDF files are accepted.`;
+    render();
+    return;
+  }
+  state.uploadError = null;
   state.fileName = file.name;
   state.fileSize = (file.size/1024).toFixed(0) + ' KB';
   state.scanned = false;
