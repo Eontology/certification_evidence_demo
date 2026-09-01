@@ -1,1 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eontology — Verification Engine Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B2430; --ink-soft:#5B6472; --ink-faint:#8B93A0;
+    --paper:#EFF1EC; --panel:#FFFFFF; --line:#DBDFD6; --line-soft:#E7E9E2;
+    --navy:#223A5E; --navy-soft:#34527D; --navy-bg:#E4E9F0;
+    --green:#2F6F4E; --green-bg:#E3EEE7; --green-line:#B9D6C4;
+    --red:#8B3A3A; --red-bg:#F3E4E1; --red-line:#E0BEB6;
+    --amber:#8A5E14; --amber-bg:#F3EBDB; --amber-line:#E3CE9F;
+    --rust:#9C4A22; --rust-bg:#F2E5DB; --rust-line:#E4BFA0;
+    --gray:#5F6259; --gray-bg:#E7E7E2; --gray-line:#D2D3CB;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+  .mono{font-family:'Roboto Mono',monospace;}
+  h1,h2,h3,.display{font-family:'Zilla Slab',serif;}
+
+  /* ---------- top bar ---------- */
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--line);background:var(--panel);gap:20px;}
+  .topbar-right{display:flex;align-items:center;gap:14px;flex-shrink:0;}
+  .icon-only-btn{width:36px;height:36px;border-radius:6px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:default;color:var(--ink-faint);position:relative;}
+  .account-pill{display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:20px;border:1px solid var(--line);cursor:default;color:var(--ink-soft);}
+  .account-avatar{width:24px;height:24px;border-radius:50%;background:var(--navy-bg);color:var(--navy);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+  .account-name{font-size:13px;font-weight:600;}
+  .soon-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);background:var(--gray-bg);padding:2px 6px;border-radius:4px;margin-left:2px;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{width:26px;height:26px;border:2px solid var(--navy);border-radius:50%;position:relative;flex-shrink:0;}
+  .brand-mark::after{content:"";position:absolute;inset:5px;border:1.5px solid var(--navy);border-radius:50%;}
+  .brand-name{font-family:'Zilla Slab',serif;font-weight:600;font-size:19px;letter-spacing:.2px;}
+  .steps{display:flex;gap:0;align-items:center;}
+  .step-dot{display:flex;align-items:center;gap:8px;padding:0 14px;position:relative;}
+  .step-dot:not(:last-child)::after{content:"";position:absolute;right:-1px;top:50%;width:22px;height:1px;background:var(--line);}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--line);flex-shrink:0;transition:background .2s;}
+  .step-dot.active .dot{background:var(--navy);}
+  .step-dot.done .dot{background:var(--green);}
+  .step-label{font-size:12px;color:var(--ink-faint);}
+  .step-dot.active .step-label{color:var(--navy);font-weight:600;}
+  .step-dot.done .step-label{color:var(--green);}
+  @media (max-width:900px){.steps{display:none;}}
+
+  /* ---------- layout ---------- */
+  .stage{max-width:760px;margin:0 auto;padding:56px 24px 96px;}
+  .eyebrow{font-size:13px;color:var(--ink-faint);margin-bottom:6px;}
+  .headline{font-size:30px;font-weight:600;margin:0 0 10px;line-height:1.2;}
+  .sub{color:var(--ink-soft);font-size:15px;line-height:1.55;max-width:56ch;margin:0 0 32px;}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;border-top:3px solid var(--navy);padding:32px;}
+  .actions{display:flex;justify-content:space-between;align-items:center;margin-top:28px;}
+  .btn{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;padding:11px 22px;border-radius:5px;border:1px solid transparent;cursor:pointer;transition:.15s;}
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:var(--navy-soft);}
+  .btn-primary:disabled{background:var(--line);color:var(--ink-faint);cursor:not-allowed;}
+  .btn-ghost{background:transparent;color:var(--ink-soft);border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--ink-faint);color:var(--ink);}
+
+  /* ---------- upload ---------- */
+  .dropzone{border:1.5px dashed var(--line);border-radius:6px;padding:48px 24px;text-align:center;cursor:pointer;transition:.15s;}
+  .dropzone:hover, .dropzone.drag{border-color:var(--navy);background:var(--navy-bg);}
+  .dropzone svg{margin-bottom:14px;}
+  .dropzone .dz-title{font-weight:600;font-size:15px;margin-bottom:4px;}
+  .dropzone .dz-sub{font-size:13px;color:var(--ink-faint);}
+  #fileInput{display:none;}
+  .file-row{display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--navy-bg);border-radius:6px;margin-top:6px;}
+  .file-icon{width:34px;height:34px;border-radius:5px;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+  .file-meta{flex:1;min-width:0;}
+  .file-name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .file-size{font-size:12px;color:var(--ink-faint);}
+  .scan-status{font-size:12px;color:var(--green);font-weight:600;display:flex;align-items:center;gap:6px;}
+  .scan-status.pending{color:var(--ink-faint);}
+
+  /* ---------- progress / processing ---------- */
+  .process-wrap{padding:64px 0;text-align:center;}
+  .ring{width:56px;height:56px;margin:0 auto 24px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--navy);animation:spin 0.9s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .process-title{font-weight:600;font-size:16px;margin-bottom:6px;}
+  .process-sub{font-size:13px;color:var(--ink-faint);font-family:'Roboto Mono',monospace;min-height:18px;}
+
+  /* ---------- form fields ---------- */
+  .field{margin-bottom:22px;}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:7px;}
+  select{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:5px;font-family:'Inter',sans-serif;font-size:14px;background:var(--panel) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%235B6472" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>') no-repeat right 14px center;appearance:none;color:var(--ink);}
+  select:disabled{color:var(--ink-faint);background-color:var(--gray-bg);}
+  .extract-list{border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+  .extract-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line-soft);}
+  .extract-row:last-child{border-bottom:none;}
+  .extract-row.disabled{opacity:.5;}
+  .extract-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--navy);flex-shrink:0;}
+  .extract-name{font-weight:600;font-size:14px;flex:1;}
+  .extract-tag{font-size:11px;color:var(--ink-faint);border:1px solid var(--line);border-radius:20px;padding:2px 9px;}
+
+  /* ---------- claim list ---------- */
+  .ledger{border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+  .claim-row{display:flex;gap:16px;padding:18px 18px;border-bottom:1px solid var(--line-soft);align-items:flex-start;}
+  .claim-row:last-child{border-bottom:none;}
+  .claim-row.removed{opacity:.4;}
+  .claim-num{font-family:'Roboto Mono',monospace;font-size:12px;color:var(--ink-faint);padding-top:2px;width:20px;flex-shrink:0;}
+  .claim-text{flex:1;font-size:14.5px;line-height:1.5;}
+  .claim-actions{display:flex;gap:6px;flex-shrink:0;}
+  .icon-btn{width:30px;height:30px;border-radius:5px;border:1px solid var(--line);background:var(--panel);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.15s;}
+  .icon-btn.keep.active{background:var(--green-bg);border-color:var(--green-line);}
+  .icon-btn.remove.active{background:var(--red-bg);border-color:var(--red-line);}
+  .icon-btn:hover{border-color:var(--ink-faint);}
+
+  /* ---------- evidence ---------- */
+  .evi-row{border:1px solid var(--line);border-radius:6px;margin-bottom:12px;overflow:hidden;}
+  .evi-head{display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;}
+  .evi-claim-text{flex:1;font-size:14px;line-height:1.4;}
+  .badge{font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:20px;border:1px solid; white-space:nowrap; flex-shrink:0;}
+  .badge-verified{color:var(--green);background:var(--green-bg);border-color:var(--green-line);}
+  .badge-partial{color:var(--amber);background:var(--amber-bg);border-color:var(--amber-line);}
+  .badge-contested{color:var(--red);background:var(--red-bg);border-color:var(--red-line);}
+  .badge-unsupported{color:var(--gray);background:var(--gray-bg);border-color:var(--gray-line);}
+  .chevron{width:16px;height:16px;flex-shrink:0;transition:transform .15s;color:var(--ink-faint);}
+  .evi-row.open .chevron{transform:rotate(180deg);}
+  .evi-body{max-height:0;overflow:hidden;transition:max-height .2s ease;}
+  .evi-row.open .evi-body{max-height:420px;}
+  .evi-body-inner{padding:0 18px 20px;border-top:1px solid var(--line-soft);}
+  .evi-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 24px;margin:16px 0;}
+  .evi-field{font-size:13px;}
+  .evi-field .k{color:var(--ink-faint);margin-bottom:3px;}
+  .evi-field .v{font-weight:600;}
+  .evi-quote{background:var(--paper);border-left:3px solid var(--navy);padding:12px 14px;font-size:13.5px;line-height:1.5;font-style:italic;color:var(--ink-soft);border-radius:0 4px 4px 0;}
+
+  /* ---------- summary ---------- */
+  .stamp-row{display:flex;gap:28px;align-items:center;margin-bottom:32px;}
+  .stamp{width:150px;height:150px;border-radius:50%;border:3px solid var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;position:relative;}
+  .stamp::before{content:"";position:absolute;inset:8px;border:1px solid var(--navy);border-radius:50%;opacity:.4;}
+  .stamp-score{font-family:'Zilla Slab',serif;font-size:40px;font-weight:700;color:var(--navy);}
+  .stamp-label{font-size:10.5px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
+  .stat-list{flex:1;}
+  .stat-row{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-bottom:1px solid var(--line-soft);}
+  .stat-row:last-child{border:none;}
+  .stat-row .k{color:var(--ink-soft);}
+  .stat-row .v{font-weight:700;font-family:'Roboto Mono',monospace;}
+  .breakdown{margin-bottom:8px;}
+  .breakdown-bar{display:flex;height:12px;border-radius:6px;overflow:hidden;margin-bottom:12px;border:1px solid var(--line);}
+  .seg-supported{background:var(--green);}
+  .seg-partly{background:var(--amber);}
+  .seg-attention{background:var(--rust);}
+  .legend{display:flex;gap:20px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-soft);}
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .legend i{width:9px;height:9px;border-radius:2px;display:inline-block;}
+
+  .banner{background:var(--navy);color:#fff;font-size:13px;padding:10px 32px;text-align:center;}
+  .banner b{font-weight:700;}
+</style>
+</head>
+<body>
+
+<div class="banner">Preview build — extraction and evidence results below are simulated for demo purposes. <b>Not connected to live registries yet.</b></div>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark"></div>
+    <div class="brand-name">Eontology</div>
+  </div>
+  <div class="steps" id="stepNav"></div>
+  <div class="topbar-right">
+    <button class="icon-only-btn" title="Settings — not yet available" aria-label="Settings (placeholder)">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09A1.65 1.65 0 0015 4.6a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    </button>
+    <div class="account-pill" title="Account — not yet available">
+      <div class="account-avatar">?</div>
+      <div class="account-name">Guest</div>
+      <span class="soon-tag">Soon</span>
+    </div>
+  </div>
+</div>
+
+<div class="stage" id="stage"></div>
+
+<script>
+const STEPS = [
+  {id:'upload', label:'Upload'},
+  {id:'configure', label:'Configure'},
+  {id:'extract', label:'Extraction'},
+  {id:'review', label:'Review claims'},
+  {id:'evidence', label:'Evidence'},
+  {id:'summary', label:'Summary'},
+];
+
+const state = {
+  step: 0,
+  fileName: null,
+  fileSize: null,
+  scanned: false,
+  industry: '',
+  macrotopic: '',
+  topic: '',
+  claims: [],
+  evidence: [],
+};
+
+const MOCK_CLAIMS = [
+  "Fritz Winter Eisengiesserei GmbH & Co KG holds a valid ISO 45001:2018 occupational health and safety certification.",
+  "The management system has been certified since 4 August 2021.",
+  "The certificate remains valid through 3 July 2026.",
+  "Certification scope covers cast iron casting operations for marine applications at the Laubach, Germany facility."
+];
+
+const MOCK_EVIDENCE = [
+  {
+    verdict:'verified', label:'Verified',
+    type:'Certification — ISO 45001:2018', source:'DNV Certificate Registry (Tier 2)', method:'Registry-matched',
+    fetched:'2026-08-24', completeness:'All claimed fields — entity, standard, status — matched the registry unit.',
+    quote:'Entity: FRITZ WINTER EISENGIESSEREI GMBH & CO KG — Standard: ISO 45001:2018 — Status: Active.'
+  },
+  {
+    verdict:'partial', label:'Partially verified',
+    type:'Certification — issue date', source:'DNV Certificate Registry (Tier 2)', method:'Registry-matched',
+    fetched:'2026-08-24', completeness:'System-side gap: the registry exposes issue year only, not the exact date, so the specific day claimed could not be checked.',
+    quote:'Registry unit lists issue year 2021. Exact issue date is not published by this source.'
+  },
+  {
+    verdict:'contested', label:'Contested',
+    type:'Certification — current status', source:'DNV Certificate Registry (Tier 2)', method:'Registry-matched',
+    fetched:'2026-08-24', completeness:'Evidence actively contradicts the claim: registry status is Suspended, pending a missed surveillance audit.',
+    quote:'Registry currently lists this certification as Suspended, effective 2026-06-12.'
+  },
+  {
+    verdict:'unsupported', label:'Unsupported',
+    type:'Certification — scope', source:'No matching source', method:'Document-uploaded fallback attempted',
+    fetched:'—', completeness:'No available Truth Product exposes facility-level scope data; this claim could not be resolved against any known source.',
+    quote:'No matching unit found for this claim.'
+  },
+];
+
+const INDUSTRIES = ['Manufacturing','Construction','Energy & Utilities','Healthcare','Logistics & Supply Chain'];
+const MACROTOPICS = {
+  'Environmental': ['ISO 14001 — Environmental Management'],
+  'Health & Safety': ['ISO 45001 — Occupational Health & Safety'],
+  'Quality': ['ISO 9001 — Quality Management'],
+};
+const EXTRACT_TYPES = [
+  {name:'Claims about certifications', enabled:true, tag:null},
+  {name:'Claims about occupational licenses', enabled:false, tag:'Phase 2'},
+  {name:'Claims about sustainability / ESG reporting', enabled:false, tag:'Phase 3'},
+  {name:'Claims about financial statements', enabled:false, tag:'Later'},
+];
+
+function renderStepNav(){
+  const nav = document.getElementById('stepNav');
+  nav.innerHTML = STEPS.map((s,i)=>{
+    let cls = 'step-dot';
+    if(i < state.step) cls += ' done';
+    if(i === state.step) cls += ' active';
+    return `<div class="${cls}"><div class="dot"></div><div class="step-label">${s.label}</div></div>`;
+  }).join('');
+}
+
+function goTo(i){ state.step = i; render(); window.scrollTo({top:0, behavior:'smooth'}); }
+function next(){ goTo(state.step+1); }
+function back(){ goTo(state.step-1); }
+
+function render(){
+  renderStepNav();
+  const fn = RENDERERS[STEPS[state.step].id];
+  document.getElementById('stage').innerHTML = fn();
+  attachHandlers();
+}
+
+const RENDERERS = {
+  upload: () => `
+    <div class="eyebrow">Step 1 of 6</div>
+    <h1 class="headline">Upload a document</h1>
+    <p class="sub">Upload a document that may contain certification-related claims — a proposal, a supplier submission, an audit pack. PDF and DOCX supported.</p>
+    <div class="panel">
+      ${state.fileName ? `
+        <div class="file-row">
+          <div class="file-icon">PDF</div>
+          <div class="file-meta">
+            <div class="file-name">${state.fileName}</div>
+            <div class="file-size">${state.fileSize}</div>
+          </div>
+          <div class="scan-status ${state.scanned ? '' : 'pending'}" id="scanStatus">
+            ${state.scanned ? '✓ Scanned — no threats found' : 'Scanning for threats…'}
+          </div>
+        </div>
+      ` : `
+        <div class="dropzone" id="dropzone">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#5B6472" stroke-width="1.5"><path d="M12 3v12m0-12l-4 4m4-4l4 4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+          <div class="dz-title">Drop a file here, or click to browse</div>
+          <div class="dz-sub">PDF or DOCX, up to 20MB</div>
+        </div>
+        <input type="file" id="fileInput" accept=".pdf,.docx">
+      `}
+    </div>
+    <div class="actions">
+      <span></span>
+      <button class="btn btn-primary" id="nextBtn" ${state.scanned ? '' : 'disabled'}>Continue</button>
+    </div>
+  `,
+
+  configure: () => `
+    <div class="eyebrow">Step 2 of 6</div>
+    <h1 class="headline">Tell us what to look for</h1>
+    <p class="sub">These flags narrow the search space and cut unnecessary processing — none are required, but they improve accuracy.</p>
+    <div class="panel">
+      <div class="field">
+        <label for="industrySel">Industry</label>
+        <select id="industrySel">
+          <option value="">Not specified</option>
+          ${INDUSTRIES.map(i=>`<option value="${i}" ${state.industry===i?'selected':''}>${i}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label for="macroSel">Macrotopic</label>
+        <select id="macroSel">
+          <option value="">Not specified</option>
+          ${Object.keys(MACROTOPICS).map(m=>`<option value="${m}" ${state.macrotopic===m?'selected':''}>${m}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label for="topicSel">Topic</label>
+        <select id="topicSel" ${state.macrotopic ? '' : 'disabled'}>
+          <option value="">${state.macrotopic ? 'Not specified' : 'Select a macrotopic first'}</option>
+          ${(MACROTOPICS[state.macrotopic]||[]).map(t=>`<option value="${t}" ${state.topic===t?'selected':''}>${t}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>What should we extract?</label>
+        <div class="extract-list">
+          ${EXTRACT_TYPES.map((e,i)=>`
+            <div class="extract-row ${e.enabled?'':'disabled'}">
+              <input type="checkbox" ${e.enabled?'checked disabled':'disabled'}>
+              <div class="extract-name">${e.name}</div>
+              ${e.tag ? `<div class="extract-tag">${e.tag}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-ghost" id="backBtn">Back</button>
+      <button class="btn btn-primary" id="nextBtn">Extract claims</button>
+    </div>
+  `,
+
+  extract: () => `
+    <div class="process-wrap">
+      <div class="ring"></div>
+      <div class="process-title">Splitting document into claims</div>
+      <div class="process-sub mono" id="processSub">Reading document structure…</div>
+    </div>
+  `,
+
+  review: () => `
+    <div class="eyebrow">Step 4 of 6</div>
+    <h1 class="headline">Review the extracted claims</h1>
+    <p class="sub">We found ${state.claims.length} certification-related claims. Remove anything that isn't relevant before we search for evidence.</p>
+    <div class="ledger">
+      ${state.claims.map((c,i)=>`
+        <div class="claim-row ${c.kept?'':'removed'}">
+          <div class="claim-num mono">${String(i+1).padStart(2,'0')}</div>
+          <div class="claim-text">${c.text}</div>
+          <div class="claim-actions">
+            <button class="icon-btn keep ${c.kept?'active':''}" data-action="keep" data-i="${i}" title="Keep">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${c.kept?'#2F6F4E':'#5B6472'}" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+            <button class="icon-btn remove ${c.kept?'':'active'}" data-action="remove" data-i="${i}" title="Remove">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${c.kept?'#5B6472':'#8B3A3A'}" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="actions">
+      <button class="btn btn-ghost" id="backBtn">Back</button>
+      <button class="btn btn-primary" id="nextBtn">Search for evidence</button>
+    </div>
+  `,
+
+  evidence: () => `
+    <div class="process-wrap" id="evidenceProcessing">
+      <div class="ring"></div>
+      <div class="process-title">Matching claims against available evidence</div>
+      <div class="process-sub mono" id="processSub">Querying registries…</div>
+    </div>
+  `,
+
+  summary: () => {
+    const kept = state.evidence;
+    const n = kept.length;
+    const counts = {verified:0, partial:0, contested:0, unsupported:0};
+    kept.forEach(e=>counts[e.verdict]++);
+    const attention = counts.contested + counts.unsupported;
+    const pctVerified = Math.round(counts.verified/n*100);
+    const pctPartial = Math.round(counts.partial/n*100);
+    const pctAttention = 100 - pctVerified - pctPartial;
+    const readiness = Math.round((counts.verified*100 + counts.partial*50)/n);
+    return `
+      <div class="eyebrow">Step 6 of 6</div>
+      <h1 class="headline">Document evidence summary</h1>
+      <p class="sub">A composite read on how well this document's certification claims hold up against available evidence.</p>
+      <div class="panel">
+        <div class="stamp-row">
+          <div class="stamp">
+            <div class="stamp-score">${readiness}%</div>
+            <div class="stamp-label">Readiness</div>
+          </div>
+          <div class="stat-list">
+            <div class="stat-row"><span class="k">Claims analyzed</span><span class="v">${n}</span></div>
+            <div class="stat-row"><span class="k">Verified</span><span class="v">${counts.verified}</span></div>
+            <div class="stat-row"><span class="k">Partially verified</span><span class="v">${counts.partial}</span></div>
+            <div class="stat-row"><span class="k">Needs attention</span><span class="v">${attention}</span></div>
+          </div>
+        </div>
+        <div class="breakdown">
+          <div class="breakdown-bar">
+            <div class="seg-supported" style="width:${pctVerified}%"></div>
+            <div class="seg-partly" style="width:${pctPartial}%"></div>
+            <div class="seg-attention" style="width:${pctAttention}%"></div>
+          </div>
+          <div class="legend">
+            <span><i style="background:var(--green)"></i>Verified — ${pctVerified}%</span>
+            <span><i style="background:var(--amber)"></i>Partially verified — ${pctPartial}%</span>
+            <span><i style="background:var(--red)"></i>Needs attention (contested or unsupported) — ${pctAttention}%</span>
+          </div>
+        </div>
+      </div>
+      <h1 class="headline" style="font-size:20px;margin-top:36px">Per-claim evidence</h1>
+      ${kept.map((e,i)=>`
+        <div class="evi-row" data-i="${i}">
+          <div class="evi-head" data-action="toggle" data-i="${i}">
+            <div class="evi-claim-text">${state.claims.filter(c=>c.kept)[i] ? state.claims.filter(c=>c.kept)[i].text : ''}</div>
+            <div class="badge badge-${e.verdict}">${e.label}</div>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="evi-body">
+            <div class="evi-body-inner">
+              <div class="evi-grid">
+                <div class="evi-field"><div class="k">Evidence type</div><div class="v">${e.type}</div></div>
+                <div class="evi-field"><div class="k">Source</div><div class="v">${e.source}</div></div>
+                <div class="evi-field"><div class="k">Verification method</div><div class="v">${e.method}</div></div>
+                <div class="evi-field"><div class="k">Freshness — as of</div><div class="v mono">${e.fetched}</div></div>
+              </div>
+              <div class="evi-field" style="margin-bottom:12px"><div class="k">Completeness detail</div><div class="v" style="font-weight:500">${e.completeness}</div></div>
+              <div class="evi-quote">"${e.quote}"</div>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+      <div class="actions">
+        <button class="btn btn-ghost" id="restartBtn">Start a new document</button>
+        <span></span>
+      </div>
+    `;
+  },
+};
+
+function attachHandlers(){
+  const step = STEPS[state.step].id;
+
+  if(step === 'upload'){
+    const dz = document.getElementById('dropzone');
+    const input = document.getElementById('fileInput');
+    if(dz){
+      dz.addEventListener('click', ()=> input.click());
+      input.addEventListener('change', e=>{
+        if(e.target.files.length) simulateUpload(e.target.files[0]);
+      });
+      dz.addEventListener('dragover', e=>{e.preventDefault(); dz.classList.add('drag');});
+      dz.addEventListener('dragleave', ()=> dz.classList.remove('drag'));
+      dz.addEventListener('drop', e=>{
+        e.preventDefault(); dz.classList.remove('drag');
+        if(e.dataTransfer.files.length) simulateUpload(e.dataTransfer.files[0]);
+      });
+    }
+    const nb = document.getElementById('nextBtn');
+    if(nb) nb.addEventListener('click', next);
+  }
+
+  if(step === 'configure'){
+    document.getElementById('industrySel').addEventListener('change', e=> state.industry = e.target.value);
+    document.getElementById('macroSel').addEventListener('change', e=>{
+      state.macrotopic = e.target.value; state.topic=''; render();
+    });
+    document.getElementById('topicSel').addEventListener('change', e=> state.topic = e.target.value);
+    document.getElementById('backBtn').addEventListener('click', back);
+    document.getElementById('nextBtn').addEventListener('click', ()=>{ next(); runExtraction(); });
+  }
+
+  if(step === 'review'){
+    document.querySelectorAll('[data-action="keep"], [data-action="remove"]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const i = +btn.dataset.i;
+        state.claims[i].kept = btn.dataset.action === 'keep';
+        render();
+      });
+    });
+    document.getElementById('backBtn').addEventListener('click', back);
+    document.getElementById('nextBtn').addEventListener('click', ()=>{ next(); runEvidenceSearch(); });
+  }
+
+  if(step === 'summary'){
+    document.querySelectorAll('[data-action="toggle"]').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        el.closest('.evi-row').classList.toggle('open');
+      });
+    });
+    document.getElementById('restartBtn').addEventListener('click', ()=>{
+      Object.assign(state, {step:0, fileName:null, fileSize:null, scanned:false, industry:'', macrotopic:'', topic:'', claims:[], evidence:[]});
+      render();
+    });
+  }
+}
+
+function simulateUpload(file){
+  state.fileName = file.name;
+  state.fileSize = (file.size/1024).toFixed(0) + ' KB';
+  state.scanned = false;
+  render();
+  setTimeout(()=>{ state.scanned = true; render(); }, 1200);
+}
+
+function runExtraction(){
+  const messages = ['Reading document structure…','Identifying certification-related passages…','Extracting claim elements…'];
+  let i=0;
+  const interval = setInterval(()=>{
+    const el = document.getElementById('processSub');
+    if(el) el.textContent = messages[i % messages.length];
+    i++;
+  }, 700);
+  setTimeout(()=>{
+    clearInterval(interval);
+    state.claims = MOCK_CLAIMS.map(text=>({text, kept:true}));
+    next();
+  }, 2200);
+}
+
+function runEvidenceSearch(){
+  const messages = ['Querying registries…','Matching claims to units…','Scoring evidence…'];
+  let i=0;
+  const interval = setInterval(()=>{
+    const el = document.getElementById('processSub');
+    if(el) el.textContent = messages[i % messages.length];
+    i++;
+  }, 700);
+  setTimeout(()=>{
+    clearInterval(interval);
+    const keptCount = state.claims.filter(c=>c.kept).length;
+    state.evidence = MOCK_EVIDENCE.slice(0, keptCount);
+    next();
+  }, 2200);
+}
+
+render();
+</script>
+</body>
+</html>
 
